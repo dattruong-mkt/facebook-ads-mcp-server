@@ -1,0 +1,315 @@
+{
+  "dxt_version": "0.1",
+  "name": "facebook-ads-mcp-server",
+  "display_name": "Facebook Ads MCP Server",
+  "version": "0.1.0",
+  "description": "A Python MCP server for Facebook Ads API integration",
+  "long_description": "This extension provides comprehensive Facebook Ads management capabilities through a Python MCP server. It enables programmatic access to Facebook Ads data and management features, including account management, campaign insights, ad set operations, and performance analytics through the Facebook Graph API.",
+  "author": {
+    "name": "GoMarble AI",
+    "email": "support@gomarble.ai",
+    "url": "https://github.com/gomarble-ai"
+  },
+  "icon": "favicon.png",
+  "server": {
+    "type": "python",
+    "entry_point": "server_sdk.py",
+    "mcp_config": {
+      "command": "python",
+      "args": [
+        "${__dirname}/server_sdk.py",
+        "--fb-token",
+        "${user_config.facebook_access_token}"
+      ],
+      "env": {
+        "DEBUG": "${user_config.debug_mode}",
+        "PYTHONPATH": "${__dirname}/lib"
+      },
+      "cwd": "${__dirname}"
+    }
+  },
+  "tools": [
+    {
+      "name": "list_ad_accounts",
+      "description": "Lists ad accounts linked to the Facebook access token"
+    },
+    {
+      "name": "get_details_of_ad_account",
+      "description": "Retrieves details for a specific ad account"
+    },
+    {
+      "name": "get_adaccount_insights",
+      "description": "Retrieves performance insights for an ad account"
+    },
+    {
+      "name": "get_campaign_insights",
+      "description": "Retrieves performance insights for a campaign"
+    },
+    {
+      "name": "get_adset_insights",
+      "description": "Retrieves performance insights for an ad set"
+    },
+    {
+      "name": "get_ad_insights",
+      "description": "Retrieves performance insights for an ad"
+    },
+    {
+      "name": "fetch_pagination_url",
+      "description": "Fetches data from a pagination URL"
+    },
+    {
+      "name": "get_ad_creative_by_id",
+      "description": "Retrieves details for a specific ad creative"
+    },
+    {
+      "name": "get_ad_creatives_by_ad_id",
+      "description": "Retrieves creatives associated with an ad"
+    },
+    {
+      "name": "get_ad_by_id",
+      "description": "Retrieves details for a specific ad"
+    },
+    {
+      "name": "get_ads_by_adaccount",
+      "description": "Retrieves ads within an ad account"
+    },
+    {
+      "name": "get_ads_by_campaign",
+      "description": "Retrieves ads within a campaign"
+    },
+    {
+      "name": "get_ads_by_adset",
+      "description": "Retrieves ads within an ad set"
+    },
+    {
+      "name": "get_adset_by_id",
+      "description": "Retrieves details for a specific ad set"
+    },
+    {
+      "name": "get_adsets_by_ids",
+      "description": "Retrieves details for multiple ad sets by their IDs"
+    },
+    {
+      "name": "get_adsets_by_adaccount",
+      "description": "Retrieves ad sets within an ad account"
+    },
+    {
+      "name": "get_adsets_by_campaign",
+      "description": "Retrieves ad sets within a campaign"
+    },
+    {
+      "name": "get_campaign_by_id",
+      "description": "Retrieves details for a specific campaign"
+    },
+    {
+      "name": "get_campaigns_by_adaccount",
+      "description": "Retrieves campaigns within an ad account"
+    },
+    {
+      "name": "get_activities_by_adaccount",
+      "description": "Retrieves change history for an ad account"
+    },
+    {
+      "name": "get_activities_by_adset",
+      "description": "Retrieves change history for an ad set"
+    },
+    {
+      "name": "create_campaign",
+      "description": "Creates a new Facebook ad campaign. Supports all objectives, CBO budgets, buying_type (AUCTION/RESERVED), spend_cap, and Advantage+ smart_promotion_type. Use status='PAUSED' to save as draft."
+    },
+    {
+      "name": "update_campaign",
+      "description": "Updates an existing campaign: name, status, daily/lifetime budget, spend_cap, start/stop time, bid strategy"
+    },
+    {
+      "name": "create_adset",
+      "description": "Creates a new ad set. Full param support: targeting, optimization, budget, destination_type, promoted_object (pixel/app/page for conversion campaigns), pacing_type, is_dynamic_creative, frequency_control_specs, attribution_spec, DSA compliance fields, Advantage+ fields"
+    },
+    {
+      "name": "update_adset",
+      "description": "Updates an existing ad set. Supports all create_adset fields: name, status, budget, bidding, optimization, targeting, destination_type, promoted_object, pacing, frequency caps, attribution windows, DSA fields"
+    },
+    {
+      "name": "create_ad_creative",
+      "description": "Creates a new ad creative. Supports single-asset (object_story_spec), multi-asset DCO (asset_feed_spec), Advantage+ Creative (degrees_of_freedom_spec), url_tags, and call_to_action_type. Creatives are immutable after creation."
+    },
+    {
+      "name": "create_ad",
+      "description": "Creates a new ad by linking an ad creative to an ad set. Supports tracking_specs (pixel) and audience_id for ad-level targeting."
+    },
+    {
+      "name": "update_ad",
+      "description": "Updates an existing ad: name, status, creative swap (creative_id), or tracking_specs"
+    },
+    {
+      "name": "copy_campaign",
+      "description": "Duplicate a campaign into an ad account (optionally deep copy with all child ad sets and ads)"
+    },
+    {
+      "name": "copy_adset",
+      "description": "Duplicate an ad set into a campaign"
+    },
+    {
+      "name": "copy_ad",
+      "description": "Duplicate an ad into an ad set"
+    },
+    {
+      "name": "get_audiences",
+      "description": "List all custom audiences in an ad account"
+    },
+    {
+      "name": "create_custom_audience",
+      "description": "Create a custom audience (CUSTOM, WEBSITE, APP, or ENGAGEMENT subtype)"
+    },
+    {
+      "name": "upload_custom_audience_users",
+      "description": "Upload hashed email/phone list to a CUSTOM audience"
+    },
+    {
+      "name": "create_lookalike_audience",
+      "description": "Create a Lookalike Audience from a source custom audience"
+    },
+    {
+      "name": "get_reach_estimate",
+      "description": "Estimate potential reach for a targeting spec before creating an ad set"
+    },
+    {
+      "name": "delete_audience",
+      "description": "Permanently delete a custom audience"
+    },
+    {
+      "name": "get_insights_with_breakdown",
+      "description": "Get ad insights broken down by age, gender, placement, device, country, etc."
+    },
+    {
+      "name": "upload_ad_image",
+      "description": "Upload a local image file to an ad account for use in creatives"
+    },
+    {
+      "name": "upload_ad_video",
+      "description": "Upload a local video file and wait for encoding to complete"
+    },
+    {
+      "name": "get_video_upload_status",
+      "description": "Check encoding status of an uploaded video"
+    },
+    {
+      "name": "get_ad_previews",
+      "description": "Get rendered HTML preview iframes for an ad across placements"
+    },
+    {
+      "name": "get_product_catalogs",
+      "description": "List all product catalogs in a Business Manager"
+    },
+    {
+      "name": "create_product_catalog",
+      "description": "Create a new product catalog (commerce, vehicles, real_estate, etc.)"
+    },
+    {
+      "name": "get_product_sets",
+      "description": "List product sets in a catalog"
+    },
+    {
+      "name": "create_product_set",
+      "description": "Create a filtered product set within a catalog for Dynamic Ads"
+    },
+    {
+      "name": "get_products",
+      "description": "List products in a catalog with optional RSQL filtering"
+    },
+    {
+      "name": "create_product",
+      "description": "Add a single product item to a catalog"
+    },
+    {
+      "name": "update_product",
+      "description": "Update fields on an existing product (price, availability, url, etc.)"
+    },
+    {
+      "name": "delete_product",
+      "description": "Delete a product from a catalog"
+    },
+    {
+      "name": "batch_upload_products",
+      "description": "Batch CREATE/UPDATE/DELETE multiple catalog products in one API call"
+    },
+    {
+      "name": "search_targeting_interests",
+      "description": "Search interest-based targeting options by keyword"
+    },
+    {
+      "name": "search_geo_locations",
+      "description": "Search geographic targeting locations by name (country, region, city)"
+    },
+    {
+      "name": "search_targeting_behaviors",
+      "description": "Search behavior-based targeting options (purchase patterns, device usage, travel)"
+    },
+    {
+      "name": "search_targeting_demographics",
+      "description": "Search demographic targeting options (education, job title, life events)"
+    },
+    {
+      "name": "browse_targeting_categories",
+      "description": "Browse all available targeting categories without a search query"
+    },
+    {
+      "name": "create_advantage_plus_shopping_campaign",
+      "description": "Create a fully AI-automated Advantage+ Shopping Campaign (ASC)"
+    },
+    {
+      "name": "create_adset_with_advantage_audience",
+      "description": "Create an ad set with Advantage+ Audience enabled (Meta AI expands targeting)"
+    },
+    {
+      "name": "enable_advantage_creative",
+      "description": "Enable Advantage+ Creative enhancements on an existing ad"
+    },
+    {
+      "name": "get_performance_recommendations",
+      "description": "Get Meta AI-generated performance recommendations for an ad account"
+    },
+    {
+      "name": "get_page_posts",
+      "description": "List recent published posts from a Facebook Page. Returns post IDs ready to use as object_story_id in ad creatives. Requires a Page Access Token — provide page_access_token param if auto-fetch fails."
+    }
+  ],
+  "keywords": [
+    "facebook",
+    "ads",
+    "marketing",
+    "analytics",
+    "advertising",
+    "campaigns",
+    "insights",
+    "social media"
+  ],
+  "license": "MIT",
+  "user_config": {
+    "facebook_access_token": {
+      "type": "string",
+      "title": "Facebook Access Token",
+      "description": "Facebook User Access Token with necessary permissions (e.g., ads_read)",
+      "required": true,
+      "sensitive": true
+    },
+    "debug_mode": {
+      "type": "boolean",
+      "title": "Debug Mode",
+      "description": "Enable debug output",
+      "default": false,
+      "required": false
+    }
+  },
+  "compatibility": {
+    "claude_desktop": ">=0.10.0",
+    "platforms": [
+      "darwin",
+      "win32",
+      "linux"
+    ],
+    "runtimes": {
+      "python": ">=3.10.0 <4"
+    }
+  }
+}
