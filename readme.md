@@ -1,39 +1,8 @@
-# Facebook/Meta Ads MCP Server
+# Facebook Ads MCP Server
 
-[![Trust Score](https://archestra.ai/mcp-catalog/api/badge/quality/gomarble-ai/facebook-ads-mcp-server)](https://archestra.ai/mcp-catalog/gomarble-ai__facebook-ads-mcp-server)
-[![smithery badge](https://smithery.ai/badge/@gomarble-ai/facebook-ads-mcp-server)](https://smithery.ai/server/@gomarble-ai/facebook-ads-mcp-server)
+An MCP (Model Context Protocol) server for the Facebook Marketing API v22.0, enabling Claude Desktop to manage Facebook ad campaigns, audiences, creatives, pixels, catalogs, and more through natural language.
 
-This project provides an MCP server acting as an interface to the Meta Ads, enabling programmatic access to Meta Ads data and management features.
-
-<video controls width="1920" height="512" src="https://github.com/user-attachments/assets/c4a76dcf-cf5d-4a1d-b976-08165e880fe4">Your browser does not support the video tag.</video>
-
-## Easy One-Click Setup
-
-For a simpler setup experience, we offer ready-to-use installers:
-
-👉 **Download installer -** [https://gomarble.ai/mcp](https://gomarble.ai/mcp)
-
-## Join our community for help and updates
-
-👉 **Slack Community -** [AI in Ads](https://join.slack.com/t/ai-in-ads/shared_invite/zt-36hntbyf8-FSFixmwLb9mtEzVZhsToJQ)
-
-## Try Google ads mcp server also
-
-👉 **Google Ads MCP -** [Google Ads MCP](https://github.com/gomarble-ai/google-ads-mcp-server)
-
-### What It Does
-
-- Installs and configures the MCP server locally
-- Automatically handles environment setup
-- Prompts for Meta token authentication during the process which is optional
-- If Meta access token is not provided then connect to GoMarble's server to create the token on your behalf
-
-### Important Disclaimer
-
-This setup **does not require** you to manually obtain a Meta Developer Access Token.
-
-Instead, it connects securely to **GoMarble's server to create the token on your behalf**.
-GoMarble **does not store** your token — it is saved locally on your machine for use with the MCP server.
+**78 tools** across two files — read-only operations in `server.py`, extended SDK + write operations in `server_sdk.py` (entry point).
 
 ---
 
@@ -41,111 +10,230 @@ GoMarble **does not store** your token — it is saved locally on your machine f
 
 ### Prerequisites
 
-*   Python 3.10+
-*   Dependencies listed in `requirements.txt`
+- Python 3.10+
+- A Facebook access token with Marketing API permissions ([how to get one](https://developers.facebook.com/docs/marketing-apis/get-started))
 
+### Install
 
+```bash
+# 1. Clone the repo
+git clone https://github.com/dattruong-mkt/facebook-ads-mcp-server.git
+cd facebook-ads-mcp-server
 
-1.  **(Optional but Recommended) Create and Activate a Virtual Environment:**
-    ```bash
-    python3 -m venv venv
-    source venv/bin/activate  # On Windows use `venv\Scripts\activate`
-    ```
+# 2. Create and activate virtual environment
+python3 -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
 
-    Using a virtual environment helps manage project dependencies cleanly[[Source]](https://docs.python.org/3/tutorial/venv.html).
-2.  **Install Dependencies:**
-    ```bash
-    pip install -r requirements.txt
-    ```
-3.  **Obtain Meta Access Token:** Secure a Meta User Access Token with the necessary permissions (e.g., `ads_read`). You can generate this through the Meta Developer portal. Follow [this link](https://elfsight.com/blog/how-to-get-facebook-access-token/).
+# 3. Install dependencies
+pip install -r requirements.txt
+```
 
-### Usage with MCP Clients (e.g., Cursor, Claude Desktop)
+### Configure Claude Desktop
 
-To integrate this server with an MCP-compatible client, add a configuration([Claude](https://modelcontextprotocol.io/quickstart/user#2-add-the-filesystem-mcp-server)) similar to the following. Replace `YOUR_META_ACCESS_TOKEN` with your actual token and adjust the path to `server.py` if necessary.
+Add the following to your Claude Desktop config file:
+
+**Mac:** `~/Library/Application Support/Claude/claude_desktop_config.json`
+**Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
 
 ```json
 {
   "mcpServers": {
-    "fb-ads-mcp-server": {
-      "command": "python",
+    "fb-ads": {
+      "command": "/full/path/to/facebook-ads-mcp-server/venv/bin/python3",
       "args": [
-        "/path/to/your/fb-ads-mcp-server/server.py",
+        "/full/path/to/facebook-ads-mcp-server/server_sdk.py",
         "--fb-token",
-        "YOUR_META_ACCESS_TOKEN"
+        "YOUR_FB_ACCESS_TOKEN"
       ]
-      // If using a virtual environment, you might need to specify the python executable within the venv:
-      // "command": "/path/to/your/fb-ads-mcp-server/venv/bin/python",
-      // "args": [
-      //   "/path/to/your/fb-ads-mcp-server/server.py",
-      //   "--fb-token",
-      //   "YOUR_META_ACCESS_TOKEN"
-      // ]
     }
   }
 }
 ```
-Restart the MCP Client app after making the update in the configuration.
 
-*(Note: On Windows, you might need to adjust the command structure or use `cmd /k` depending on your setup.)*
+Replace `/full/path/to/` with the actual path where you cloned the repo. Restart Claude Desktop after saving.
 
-### Debugging the Server
+### Verify
 
-Execute `server.py`, providing the access token via the `--fb-token` argument.
-
-```bash
-python server.py --fb-token YOUR_META_ACCESS_TOKEN
-```
-
-### Available MCP Tools
-
-This MCP server provides tools for interacting with META Ads objects and data:
-
-| Tool Name                       | Description                                              |
-| ------------------------------- | -------------------------------------------------------- |
-| **Account & Object Read**       |                                                          |
-| `list_ad_accounts`              | Lists ad accounts linked to the token.                   |
-| `get_details_of_ad_account`     | Retrieves details for a specific ad account.             |
-| `get_campaign_by_id`            | Retrieves details for a specific campaign.               |
-| `get_adset_by_id`               | Retrieves details for a specific ad set.                 |
-| `get_ad_by_id`                  | Retrieves details for a specific ad.                     |
-| `get_ad_creative_by_id`         | Retrieves details for a specific ad creative.            |
-| `get_adsets_by_ids`             | Retrieves details for multiple ad sets by their IDs.     |
-| **Fetching Collections**        |                                                          |
-| `get_campaigns_by_adaccount`    | Retrieves campaigns within an ad account.                |
-| `get_adsets_by_adaccount`       | Retrieves ad sets within an ad account.                  |
-| `get_ads_by_adaccount`          | Retrieves ads within an ad account.                      |
-| `get_adsets_by_campaign`        | Retrieves ad sets within a campaign.                     |
-| `get_ads_by_campaign`           | Retrieves ads within a campaign.                         |
-| `get_ads_by_adset`              | Retrieves ads within an ad set.                          |
-| `get_ad_creatives_by_ad_id`     | Retrieves creatives associated with an ad.               |
-| **Insights & Performance Data** |                                                          |
-| `get_adaccount_insights`        | Retrieves performance insights for an ad account.        |
-| `get_campaign_insights`         | Retrieves performance insights for a campaign.           |
-| `get_adset_insights`            | Retrieves performance insights for an ad set.            |
-| `get_ad_insights`               | Retrieves performance insights for an ad.                |
-| `fetch_pagination_url`          | Fetches data from a pagination URL (e.g., from insights).|
-| **Activity/Change History**     |                                                          |
-| `get_activities_by_adaccount`   | Retrieves change history for an ad account.              |
-| `get_activities_by_adset`       | Retrieves change history for an ad set.                  |
-
-*(Note: Most tools support additional parameters like `fields`, `filtering`, `limit`, pagination, date ranges, etc. Refer to the detailed docstrings within `server.py` for the full list and description of arguments for each tool.)*
-
-*(Note: If your Meta access token expires, you'll need to generate a new one and update the configuration file of the MCP Client with new token to continue using the tools.)*
-
-### Dependencies
-
-*   [mcp](https://pypi.org/project/mcp/) (>=1.6.0)
-*   [requests](https://pypi.org/project/requests/) (>=2.32.3)
-
-### License
-This project is licensed under the MIT License.
+After restarting Claude Desktop, you should see 78 tools available. You can ask Claude: *"List my Facebook ad accounts"* to confirm the connection works.
 
 ---
 
-## Installing via Smithery
+## Available Tools (78)
 
-To install Facebook Ads Server for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@gomarble-ai/facebook-ads-mcp-server):
+### Account & Object Read (21 tools — `server.py`)
 
-```bash
-npx -y @smithery/cli install @gomarble-ai/facebook-ads-mcp-server --client claude
+| Tool | Description |
+|------|-------------|
+| `list_ad_accounts` | List ad accounts linked to the token |
+| `get_details_of_ad_account` | Get details for a specific ad account |
+| `get_campaign_by_id` | Get details for a specific campaign |
+| `get_campaigns_by_adaccount` | Get all campaigns in an ad account |
+| `get_adset_by_id` | Get details for a specific ad set |
+| `get_adsets_by_ids` | Get details for multiple ad sets by ID |
+| `get_adsets_by_adaccount` | Get all ad sets in an ad account |
+| `get_adsets_by_campaign` | Get all ad sets in a campaign |
+| `get_ad_by_id` | Get details for a specific ad |
+| `get_ads_by_adaccount` | Get all ads in an ad account |
+| `get_ads_by_campaign` | Get all ads in a campaign |
+| `get_ads_by_adset` | Get all ads in an ad set |
+| `get_ad_creative_by_id` | Get details for a specific creative |
+| `get_ad_creatives_by_ad_id` | Get all creatives for an ad |
+| `get_adaccount_insights` | Get performance insights for an ad account |
+| `get_campaign_insights` | Get performance insights for a campaign |
+| `get_adset_insights` | Get performance insights for an ad set |
+| `get_ad_insights` | Get performance insights for an ad |
+| `get_activities_by_adaccount` | Get change history for an ad account |
+| `get_activities_by_adset` | Get change history for an ad set |
+| `fetch_pagination_url` | Fetch data from a pagination cursor URL |
+
+### Campaign, Ad Set & Ad Management (7 tools)
+
+| Tool | Description |
+|------|-------------|
+| `create_campaign` | Create a new campaign |
+| `update_campaign` | Update an existing campaign |
+| `create_adset` | Create a new ad set with full targeting |
+| `update_adset` | Update an existing ad set |
+| `create_ad_creative` | Create a new ad creative (image, video, or DCO) |
+| `create_ad` | Create a new ad |
+| `update_ad` | Update an existing ad |
+
+### Copy Operations (3 tools)
+
+| Tool | Description |
+|------|-------------|
+| `copy_campaign` | Duplicate a campaign |
+| `copy_adset` | Duplicate an ad set |
+| `copy_ad` | Duplicate an ad |
+
+### Audiences (6 tools)
+
+| Tool | Description |
+|------|-------------|
+| `get_audiences` | List custom audiences in an ad account |
+| `create_custom_audience` | Create a custom audience |
+| `upload_custom_audience_users` | Upload users to a custom audience |
+| `create_lookalike_audience` | Create a lookalike audience from a source |
+| `get_reach_estimate` | Estimate reach for a targeting spec |
+| `delete_audience` | Delete a custom audience |
+
+### Saved Audiences (2 tools)
+
+| Tool | Description |
+|------|-------------|
+| `get_saved_audiences` | List saved audiences in an ad account |
+| `get_saved_audience` | Get a saved audience's targeting spec (paste directly into create_adset) |
+
+### Insights with Breakdown (1 tool)
+
+| Tool | Description |
+|------|-------------|
+| `get_insights_with_breakdown` | Get insights broken down by age, gender, placement, device, etc. |
+
+### Creative Assets (4 tools)
+
+| Tool | Description |
+|------|-------------|
+| `upload_ad_image` | Upload an image (local path, URL, or Google Drive link) |
+| `upload_ad_video` | Upload a video (local path, URL, or Google Drive link) |
+| `get_video_upload_status` | Check video processing status |
+| `get_ad_previews` | Generate ad preview URLs for different placements |
+
+### Pixels & Custom Conversions (5 tools)
+
+| Tool | Description |
+|------|-------------|
+| `get_pixels` | List pixels in an ad account |
+| `create_pixel` | Create a new pixel |
+| `get_pixel_stats` | Get pixel event stats for a time range |
+| `get_custom_conversions` | List custom conversions in an ad account |
+| `create_custom_conversion` | Create a custom conversion from a pixel event |
+
+### Product Catalog & Commerce (9 tools)
+
+| Tool | Description |
+|------|-------------|
+| `get_product_catalogs` | List product catalogs |
+| `create_product_catalog` | Create a new product catalog |
+| `get_product_sets` | List product sets in a catalog |
+| `create_product_set` | Create a product set with filters |
+| `get_products` | List products in a catalog |
+| `create_product` | Add a product to a catalog |
+| `update_product` | Update a product |
+| `delete_product` | Remove a product from a catalog |
+| `batch_upload_products` | Upload multiple products at once |
+
+### Product Feeds (4 tools)
+
+| Tool | Description |
+|------|-------------|
+| `get_product_feeds` | List feeds in a catalog |
+| `create_product_feed` | Create a product feed (scheduled or manual) |
+| `update_product_feed` | Update a product feed |
+| `delete_product_feed` | Delete a product feed |
+
+### Targeting Search (5 tools)
+
+| Tool | Description |
+|------|-------------|
+| `search_targeting_interests` | Search interest targeting options |
+| `search_geo_locations` | Search countries, cities, regions |
+| `search_targeting_behaviors` | Search behavior targeting options |
+| `search_targeting_demographics` | Search demographic targeting options |
+| `browse_targeting_categories` | Browse all targeting categories |
+
+### Advantage+ (4 tools)
+
+| Tool | Description |
+|------|-------------|
+| `create_advantage_plus_shopping_campaign` | Create an Advantage+ Shopping campaign |
+| `create_adset_with_advantage_audience` | Create an ad set using Advantage+ audience |
+| `enable_advantage_creative` | Enable Advantage+ creative enhancements on a creative |
+| `get_performance_recommendations` | Get AI-powered performance recommendations |
+
+### Budget Schedules / Dayparting (3 tools)
+
+| Tool | Description |
+|------|-------------|
+| `get_budget_schedules` | List budget schedules for a campaign |
+| `create_budget_schedule` | Create a budget schedule (absolute or multiplier) |
+| `delete_budget_schedule` | Delete a budget schedule |
+
+### Split Tests / A/B Testing (3 tools)
+
+| Tool | Description |
+|------|-------------|
+| `get_split_tests` | List split tests in an ad account |
+| `create_split_test` | Create an A/B split test across campaigns |
+| `get_split_test` | Get split test results and winner |
+
+### Page (1 tool)
+
+| Tool | Description |
+|------|-------------|
+| `get_page_posts` | Get posts from a Facebook Page |
+
+---
+
+## Architecture
+
 ```
+server_sdk.py   — entry point, 57 tools (SDK + write operations)
+server.py       — 21 read-only tools (raw Graph API)
+```
+
+`server_sdk.py` imports the FastMCP instance from `server.py`, so all 78 tools are registered on a single MCP instance. Claude Desktop only needs to run `server_sdk.py`.
+
+---
+
+## Dependencies
+
+- [mcp](https://pypi.org/project/mcp/) >= 1.6.0
+- [requests](https://pypi.org/project/requests/) >= 2.32.3
+- [facebook-python-business-sdk](https://pypi.org/project/facebook-python-business-sdk/) >= 20.0.0
+
+---
+
+## License
+
+MIT License — based on the original [gomarble-ai/facebook-ads-mcp-server](https://github.com/gomarble-ai/facebook-ads-mcp-server), extended with 57 additional tools.
