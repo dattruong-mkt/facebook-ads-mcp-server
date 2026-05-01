@@ -2,7 +2,7 @@
 
 An MCP (Model Context Protocol) server for the Facebook Marketing API v22.0, enabling Claude Desktop to manage Facebook ad campaigns, audiences, creatives, pixels, catalogs, and more through natural language.
 
-**78 tools** across two files — read-only operations in `server.py`, extended SDK + write operations in `server_sdk.py` (entry point).
+**79 tools** across two files — read-only operations in `server.py`, extended SDK + write operations in `server_sdk.py` (entry point).
 
 ---
 
@@ -54,11 +54,11 @@ Replace `/full/path/to/` with the actual path where you cloned the repo. Restart
 
 ### Verify
 
-After restarting Claude Desktop, you should see 78 tools available. You can ask Claude: *"List my Facebook ad accounts"* to confirm the connection works.
+After restarting Claude Desktop, you should see 79 tools available. You can ask Claude: *"List my Facebook ad accounts"* to confirm the connection works.
 
 ---
 
-## Available Tools (78)
+## Available Tools (79)
 
 ### Account & Object Read (21 tools — `server.py`)
 
@@ -122,7 +122,7 @@ After restarting Claude Desktop, you should see 78 tools available. You can ask 
 | Tool | Description |
 |------|-------------|
 | `get_saved_audiences` | List saved audiences in an ad account |
-| `get_saved_audience` | Get a saved audience's targeting spec (paste directly into create_adset) |
+| `get_saved_audience` | Get a saved audience's targeting spec (paste directly into `create_adset`) |
 
 ### Insights with Breakdown (1 tool)
 
@@ -130,12 +130,13 @@ After restarting Claude Desktop, you should see 78 tools available. You can ask 
 |------|-------------|
 | `get_insights_with_breakdown` | Get insights broken down by age, gender, placement, device, etc. |
 
-### Creative Assets (4 tools)
+### Creative Assets (5 tools)
 
 | Tool | Description |
 |------|-------------|
 | `upload_ad_image` | Upload an image (local path, URL, or Google Drive link) |
 | `upload_ad_video` | Upload a video (local path, URL, or Google Drive link) |
+| `upload_and_prepare_video` | Upload a video + auto-fetch and upload its thumbnail in one step — returns `{video_id, thumbnail_hash}` ready for `create_ad_creative` |
 | `get_video_upload_status` | Check video processing status |
 | `get_ad_previews` | Generate ad preview URLs for different placements |
 
@@ -218,11 +219,11 @@ After restarting Claude Desktop, you should see 78 tools available. You can ask 
 ## Architecture
 
 ```
-server_sdk.py   — entry point, 57 tools (SDK + write operations)
+server_sdk.py   — entry point, 58 tools (SDK + write operations)
 server.py       — 21 read-only tools (raw Graph API)
 ```
 
-`server_sdk.py` imports the FastMCP instance from `server.py`, so all 78 tools are registered on a single MCP instance. Claude Desktop only needs to run `server_sdk.py`.
+`server_sdk.py` imports the FastMCP instance from `server.py`, so all 79 tools are registered on a single MCP instance. Claude Desktop only needs to run `server_sdk.py`.
 
 ---
 
@@ -236,4 +237,4 @@ server.py       — 21 read-only tools (raw Graph API)
 
 ## License
 
-MIT License — based on the original [gomarble-ai/facebook-ads-mcp-server](https://github.com/gomarble-ai/facebook-ads-mcp-server), extended with 57 additional tools.
+MIT License — based on the original [gomarble-ai/facebook-ads-mcp-server](https://github.com/gomarble-ai/facebook-ads-mcp-server), extended with 58 additional tools.
